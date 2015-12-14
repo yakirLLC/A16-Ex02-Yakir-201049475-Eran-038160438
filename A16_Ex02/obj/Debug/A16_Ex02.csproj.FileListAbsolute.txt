@@ -1,0 +1,6 @@
+E:\yakir\Studies\C#\A16 Ex02 Yakir 201049475 Eran 038160438\A16_Ex02\bin\Debug\A16_Ex02.exe
+E:\yakir\Studies\C#\A16 Ex02 Yakir 201049475 Eran 038160438\A16_Ex02\bin\Debug\A16_Ex02.pdb
+E:\yakir\Studies\C#\A16 Ex02 Yakir 201049475 Eran 038160438\A16_Ex02\obj\Debug\A16_Ex02.csprojResolveAssemblyReference.cache
+E:\yakir\Studies\C#\A16 Ex02 Yakir 201049475 Eran 038160438\A16_Ex02\obj\Debug\A16_Ex02.exe
+E:\yakir\Studies\C#\A16 Ex02 Yakir 201049475 Eran 038160438\A16_Ex02\obj\Debug\A16_Ex02.pdb
+E:\yakir\Studies\C#\A16 Ex02 Yakir 201049475 Eran 038160438\A16_Ex02\bin\Debug\Ex02.ConsoleUtils.dll
