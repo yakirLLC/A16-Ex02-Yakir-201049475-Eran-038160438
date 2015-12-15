@@ -201,16 +201,13 @@ namespace A16_Ex02
             PrintCurrentBoardStatus();
             Console.Write("{0}'s turn (X): ", m_Player1.Name);
             GetValidInput(m_Board, out iSource, out jSource, out iDestination, out jDestination);
-            while (iSource != -1)
+            m_Gameplay.Move(ref m_Board, iSource, jSource, iDestination, jDestination);
+            PrintCurrentBoardStatus();
+            while (m_Gameplay.AnyAdditionalMove(m_Board, iDestination, jDestination))
             {
+                GetValidInput(m_Board, out iSource, out jSource, out iDestination, out jDestination);
                 m_Gameplay.Move(ref m_Board, iSource, jSource, iDestination, jDestination);
                 PrintCurrentBoardStatus();
-                while (m_Gameplay.AnyAdditionalMove(m_Board, iDestination, jDestination))
-                {
-                    GetValidInput(m_Board, out iSource, out jSource, out iDestination, out jDestination);
-                    m_Gameplay.Move(ref m_Board, iSource, jSource, iDestination, jDestination);
-                    PrintCurrentBoardStatus();
-                }
             }
         }
     }

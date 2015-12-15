@@ -122,7 +122,7 @@ namespace A16_Ex02
 
         public bool CheckIfTroopEatIsLegit(string i_SourceTroop, string i_DestinationTroop , string i_FollowingSpot)
         {
-            return !(i_FollowingSpot != " " || i_DestinationTroop == i_SourceTroop);
+            return !(i_FollowingSpot != " " || i_DestinationTroop == i_SourceTroop || i_DestinationTroop == " ");
         }
         
         public bool IsRightDiagonalPossible(Board i_Board, int i_ISource, int i_JSource)
