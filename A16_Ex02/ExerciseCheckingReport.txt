@@ -1,0 +1,10 @@
+﻿==========================Exercise Checking Report==========================
+Exercise No...........: 2
+First Student Details.: 201049475 - Yakir Levi
+Second Student Details: 038160438 - Eran Levit
+Delivery Date.........: 15 - Dec - 2015
+Delivered In Delay....: Yes (2 hours and 40 minutes)
+Delay Reason..........: Debugging
+Visual Studio Version.: 2012
+Comments..............: 
+=======================End Exercise Checking Report=========================

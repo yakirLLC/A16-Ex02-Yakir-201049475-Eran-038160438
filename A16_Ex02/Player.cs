@@ -7,7 +7,8 @@ namespace A16_Ex02
     public class Player
     {
         private string m_Name;
-        private int m_Score = 0;
+        private int m_Score;
+        private bool m_IsComputer;
 
         public Player(string i_Name)
         {
@@ -18,11 +19,15 @@ namespace A16_Ex02
             }
 
             m_Name = i_Name;
+            m_Score = 0;
+            m_IsComputer = false;
         }
 
         public Player() 
         {
             m_Name = "Computer";
+            m_Score = 0;
+            m_IsComputer = true;
         }
 
         public string Name
@@ -30,6 +35,27 @@ namespace A16_Ex02
             get
             {
                 return m_Name;
+            }
+        }
+
+        public int Score
+        {
+            get
+            {
+                return m_Score;
+            }
+
+            set
+            {
+                m_Score += value;
+            }
+        }
+
+        public bool IsComputer
+        {
+            get
+            {
+                return m_IsComputer;
             }
         }
     }

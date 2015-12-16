@@ -8,51 +8,6 @@ namespace A16_Ex02
     {
         private string[,] m_Board;
         private int m_BoardSize;
-        private bool m_Player1Turn = true;
-
-        // View
-        private enum eCapLetters
-        {
-            A,
-            B,
-            C,
-            D,
-            E,
-            F,
-            G,
-            H,
-            I,
-            J
-        }
-        
-        // View
-        private enum eLowerLetters
-        {
-            a,
-            b,
-            c,
-            d,
-            e,
-            f,
-            g,
-            h,
-            i,
-            j
-        }
-
-        // gameplay
-        /*public bool Player1Turn
-        {
-            get
-            {
-                return m_Player1Turn;
-            }
-
-            set
-            {
-                m_Player1Turn = !m_Player1Turn;
-            }
-        }*/
 
         public int BoardSize
         {

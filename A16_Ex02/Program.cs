@@ -8,8 +8,8 @@ namespace A16_Ex02
     {
         public static void Main()
         {
-            View v = new View();
-            v.RunCheckers();
+            View view = new View();
+            view.RunCheckers();
         }
     }
 }

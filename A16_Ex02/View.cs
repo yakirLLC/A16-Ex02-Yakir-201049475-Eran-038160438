@@ -119,7 +119,7 @@ namespace A16_Ex02
             return boardSize;
         }
 
-        public void GetIndexers(string i_PreviousLocation, string i_NextLocation, out int o_ISource, out int o_IDestination, out int o_JSource, out int o_JDestination)
+        public void GetIndexers(string i_PreviousLocation, string i_NextLocation, out int o_ISource, out int o_JSource, out int o_IDestination, out int o_JDestination)
         {
             eCapLetters sourceCapital, destinationCapital;
             eLowerLetters sourceLower, destinationLower;
@@ -134,52 +134,57 @@ namespace A16_Ex02
             o_JDestination = (int)destinationCapital;
         }
 
-        public void GetValidInput(Board i_Board, out int o_ISource, out int o_IDestination, out int o_JSource, out int o_JDestination)
+        public void GetValidInput(Board i_Board, out int o_ISource, out int o_JSource, out int o_IDestination, out int o_JDestination, ref bool io_Quit, out string o_InputMove)
         {
-            string prevMove, nextMove, regexString, inputMove;
-            bool quit = false;
+            string prevMove, nextMove, regexString;
             Regex regex;
 
-            inputMove = Console.ReadLine();
+            o_InputMove = Console.ReadLine();
             regexString = string.Format(@"[A-{0}][a-{1}]>[A-{0}][a-{1}]|^Q$", (eCapLetters)i_Board.BoardSize - 1, (eLowerLetters)i_Board.BoardSize - 1);
             regex = new Regex(regexString);
 
-            while (!regex.IsMatch(inputMove))
+            while (!regex.IsMatch(o_InputMove))
             {
                 Console.WriteLine("Illegal move, please enter a valid move(for example: Ab>Bc) or Q to forfeit:");
-                inputMove = Console.ReadLine();
+                PrintCurrentTurn();
+                o_InputMove = Console.ReadLine();
             }
 
-            if (inputMove == "Q")
+            if (o_InputMove == "Q")
             {
-                quit = true;
+                io_Quit = true;
                 o_ISource = o_JSource = o_IDestination = o_JDestination = -1;
             }
             else
             {
-                prevMove = inputMove.Substring(0, 2);
-                nextMove = inputMove.Substring(3, 2);
+                io_Quit = false;
+                prevMove = o_InputMove.Substring(0, 2);
+                nextMove = o_InputMove.Substring(3, 2);
                 GetIndexers(prevMove, nextMove, out o_ISource, out o_JSource, out o_IDestination, out o_JDestination);
             }
-            while (!Gameplay.IsValidMove(i_Board, o_ISource, o_JSource, o_IDestination, o_JDestination) && !quit)
+
+            while (!m_Gameplay.IsValidMove(i_Board, o_ISource, o_JSource, o_IDestination, o_JDestination) && !io_Quit)
             {
                 Console.WriteLine("Illegal move, please enter a valid move(for example: Ab>Bc) or Q to forfeit:");
-                inputMove = Console.ReadLine();
-                while (!regex.IsMatch(inputMove))
+                PrintCurrentTurn();
+                o_InputMove = Console.ReadLine();
+                while (!regex.IsMatch(o_InputMove))
                 {
                     Console.WriteLine("Illegal move, please enter a valid move(for example: Ab>Bc) or Q to forfeit:");
-                    inputMove = Console.ReadLine();
+                    PrintCurrentTurn();
+                    o_InputMove = Console.ReadLine();
                 }
 
-                if (inputMove == "Q")
+                if (o_InputMove == "Q")
                 {
-                    quit = true;
+                    io_Quit = true;
                     o_ISource = o_JSource = o_IDestination = o_JDestination = -1;
                 }
                 else
                 {
-                    prevMove = inputMove.Substring(0, 2);
-                    nextMove = inputMove.Substring(3, 2);
+                    io_Quit = false;
+                    prevMove = o_InputMove.Substring(0, 2);
+                    nextMove = o_InputMove.Substring(3, 2);
                     GetIndexers(prevMove, nextMove, out o_ISource, out o_JSource, out o_IDestination, out o_JDestination);
                 }
             }
@@ -191,23 +196,140 @@ namespace A16_Ex02
             PrintBoard();
         }
 
+        public void PrintPlayerTurn(string i_PreviousMove)
+        {
+            if (m_Gameplay.Player1Turn)
+            {
+                Console.WriteLine("{0}'s move was (O): {1}", m_Player2.Name, i_PreviousMove);
+                PrintCurrentTurn();
+            }
+            else
+            {
+                Console.WriteLine("{0}'s move was (X): {1}", m_Player1.Name, i_PreviousMove);
+                PrintCurrentTurn();
+            }
+        }
+
+        public void PrintCurrentTurn()
+        {
+            if (m_Gameplay.Player1Turn)
+            {
+                Console.Write("{0}'s turn (X): ", m_Player1.Name);
+            }
+            else
+            {
+                Console.Write("{0}'s turn (O): ", m_Player2.Name);
+            }
+        }
+
+        public bool NextGameDialog()
+        {
+            string answer;
+
+            do
+            {
+                Console.WriteLine("{0}'s score is: {1}", m_Player1.Name, m_Player1.Score);
+                Console.WriteLine("{0}'s score is: {1}", m_Player2.Name, m_Player2.Score);
+                Console.WriteLine("Would you like to play again? (yes or no)");
+                answer = Console.ReadLine();
+            }
+            while (!answer.Equals("yes") && !answer.Equals("no"));
+
+            return answer.Equals("yes");
+        }
+
+        public string TranslateComputerMoveToString(int i_ISource, int i_JSource, int i_IDestination, int i_JDestination)
+        {
+            StringBuilder computerMove = new StringBuilder();
+
+            computerMove.Append((eCapLetters)i_JSource);
+            computerMove.Append((eLowerLetters)i_ISource);
+            computerMove.Append(">");
+            computerMove.Append((eCapLetters)i_JDestination);
+            computerMove.Append((eLowerLetters)i_IDestination);
+
+            return computerMove.ToString();
+        }
+
         public void RunCheckers()
         {
             int iSource, jSource, iDestination, jDestination;
-
+            string winningTroop, inputMove;
+            bool quit = false, nextGame = true;
+            
             GetPlayerDetails(out m_Player1);
             m_Board = new Board(GetBoardSize());
             CheckOpponent(out m_Player2);
-            PrintCurrentBoardStatus();
-            Console.Write("{0}'s turn (X): ", m_Player1.Name);
-            GetValidInput(m_Board, out iSource, out jSource, out iDestination, out jDestination);
-            m_Gameplay.Move(ref m_Board, iSource, jSource, iDestination, jDestination);
-            PrintCurrentBoardStatus();
-            while (m_Gameplay.AnyAdditionalMove(m_Board, iDestination, jDestination))
+            while (nextGame)
             {
-                GetValidInput(m_Board, out iSource, out jSource, out iDestination, out jDestination);
-                m_Gameplay.Move(ref m_Board, iSource, jSource, iDestination, jDestination);
                 PrintCurrentBoardStatus();
+                Console.Write("{0}'s turn (X): ", m_Player1.Name);
+                while (!m_Gameplay.IsGameOver(m_Board, quit, out winningTroop) && !m_Gameplay.IsDraw(m_Board) && !quit)
+                {
+                    if (m_Player2.IsComputer && !m_Gameplay.Player1Turn)
+                    {
+                        Move move = m_Gameplay.GetComputerMove(m_Board);
+                        iSource = move.IPreviousMove;
+                        jSource = move.JPreviousMove;
+                        iDestination = move.INextMove;
+                        jDestination = move.JNextMove;
+                        inputMove = TranslateComputerMoveToString(iSource, jSource, iDestination, jDestination);
+                    }
+                    else
+                    {
+                        GetValidInput(m_Board, out iSource, out jSource, out iDestination, out jDestination, ref quit, out inputMove);
+                    }
+
+                    if (!quit)
+                    {
+                        m_Gameplay.Move(ref m_Board, iSource, jSource, iDestination, jDestination);
+                        PrintCurrentBoardStatus();
+                        while (m_Gameplay.AnyAdditionalMove(m_Board, iDestination, jDestination, Math.Abs(iDestination - iSource)))
+                        {
+                            PrintPlayerTurn(inputMove);
+                            if (m_Player2.IsComputer && !m_Gameplay.Player1Turn)
+                            {
+                                Move move = m_Gameplay.GetComputerMove(m_Board);
+                                iSource = move.IPreviousMove;
+                                jSource = move.JPreviousMove;
+                                iDestination = move.INextMove;
+                                jDestination = move.JNextMove;
+                                inputMove = TranslateComputerMoveToString(iSource, jSource, iDestination, jDestination);
+                            }
+                            else
+                            {
+                                GetValidInput(m_Board, out iSource, out jSource, out iDestination, out jDestination, ref quit, out inputMove);
+                            }
+
+                            m_Gameplay.Move(ref m_Board, iSource, jSource, iDestination, jDestination);
+                            PrintCurrentBoardStatus();
+                        }
+
+                        m_Gameplay.SwitchTurn();
+                        PrintPlayerTurn(inputMove);
+                    }
+                }
+
+                Ex02.ConsoleUtils.Screen.Clear();
+                if (winningTroop.Equals("X"))
+                {
+                    m_Player1.Score = m_Gameplay.CalculateScore(m_Board, winningTroop, quit);
+                    Console.WriteLine("Congratulation!!! {0} has won!", m_Player1.Name);
+                }
+                else if (winningTroop.Equals("O"))
+                {
+                    m_Player2.Score = m_Gameplay.CalculateScore(m_Board, winningTroop, quit);
+                    Console.WriteLine("Congratulation!!! {0} has won!", m_Player2.Name);
+                }
+
+                nextGame = NextGameDialog();
+                quit = false;
+                if (!m_Gameplay.Player1Turn)
+                {
+                    m_Gameplay.SwitchTurn();
+                }
+
+                m_Board = new Board(m_Board.BoardSize);
             }
         }
     }
